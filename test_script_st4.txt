@@ -1,0 +1,28 @@
+# Полное тестирование команд этапа 4
+echo "=== Testing enhanced commands ==="
+
+pwd
+whoami
+uptime
+
+cd /home/user/documents
+pwd
+ls
+du
+
+cd ..
+pwd
+ls
+du
+
+cd ~
+pwd
+
+cd /nonexistent
+cd ..
+
+uptime
+du /home
+
+echo "=== All tests completed ==="
+exit

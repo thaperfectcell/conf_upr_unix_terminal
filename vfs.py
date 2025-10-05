@@ -1,7 +1,4 @@
 class VFSNode:
-    """
-    Один узел в виртуальной файловой системе (файл или папка)
-    """
     def __init__(self, node_type, path, name, content, encoding, permissions):
         self.type = node_type      # 'file' или 'directory'
         self.path = path          # полный путь: '/home/user'
@@ -13,21 +10,20 @@ class VFSNode:
         self.parent = None        # ссылка на родительский узел
     
     def __str__(self):
-        """
-        Красивое строковое представление узла
-        """
         if self.type == 'directory':
-            return f"📁 {self.name}/"
+            return f"{self.name}/"
         else:
             encoding_info = f" [{self.encoding}]" if self.encoding != 'text' else ""
-            return f"📄 {self.name}{encoding_info}"
+            return f"{self.name}{encoding_info}"
 
 class VirtualFileSystem:
     def __init__(self):
         self.root = None          # корневая папка
         self.current_path = "/"   # текущий путь
+        self.current_directory = None
         self.nodes = {}           # словарь {путь: узел}
-    
+        self.current_user = "virtual_user"
+
     def load_from_csv(self, csv_path):
         try:
             import csv
@@ -118,3 +114,89 @@ class VirtualFileSystem:
             return f"Error: '{path}' is not a directory"
         
         return [child.name for child in node.children]
+    
+    def change_directory(self, path):
+        # Обработка cd ..
+        if path == "..":
+            if self.current_path == "/":
+                return "Error: Already at root directory"
+            
+            parent_path = '/'.join(self.current_path.split('/')[:-1]) or '/'
+            node = self.get_node(parent_path)
+            
+            if node and node.type == 'directory':
+                self.current_path = parent_path
+                self.current_directory = node
+                return f"Changed directory to {self.current_path}"
+            else:
+                return "Error: Parent directory not found"
+        
+        if path.startswith('/'):
+            target_path = path
+        else:
+            if self.current_path == '/':
+                target_path = '/' + path
+            else:
+                target_path = self.current_path + '/' + path
+        
+        # Нормализуем путь (убираем двойные слеши)
+        target_path = target_path.replace('//', '/')
+        
+        node = self.get_node(target_path)
+        
+        if not node:
+            return f"Error: Directory '{path}' not found"
+        
+        if node.type != 'directory':
+            return f"Error: '{path}' is not a directory"
+        
+        # Меняем текущую директорию
+        self.current_path = target_path
+        self.current_directory = node
+        return f"Changed directory to {self.current_path}"
+
+    def list_directory(self, path=None):
+        if path is None:
+            path = self.current_path
+        
+        node = self.get_node(path)
+        if not node:
+            return f"Error: Directory '{path}' not found"
+        
+        if node.type != 'directory':
+            return f"Error: '{path}' is not a directory"
+        
+        # Возвращаем только имена дочерних элементов
+        return [child.name for child in node.children]
+    
+    def calculate_directory_size(self, path=None):
+        if path is None:
+            path = self.current_path
+        
+        node = self.get_node(path)
+        if not node:
+            return 0
+        
+        total_size = 0
+        
+        if node.type == 'file':
+            # Для файла считаем длину содержимого + служебная информация
+            content_size = len(node.content) if node.content else 0
+            return content_size + 100  # +100 байт на метаданные
+        
+        elif node.type == 'directory':
+            # Для директории рекурсивно считаем размер всех детей
+            for child in node.children:
+                total_size += self.calculate_directory_size(child.path)
+            return total_size + 50  # +50 байт на метаданные директории
+
+    def format_size(self, size_bytes):
+        """
+        Форматирует размер в читаемом виде
+        """
+        if size_bytes >= 1024 * 1024:
+            return f"{size_bytes / (1024 * 1024):.1f} MB"
+        elif size_bytes >= 1024:
+            return f"{size_bytes / 1024:.1f} KB"
+        else:
+            return f"{size_bytes} bytes"
