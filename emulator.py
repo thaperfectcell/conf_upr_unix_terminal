@@ -1,6 +1,7 @@
 from parser import parse_command
 from config import parse_arguments
 from script_runner import execute_script_file
+from vfs import VirtualFileSystem
 
 def format_command_output(command, args):
     if args:
@@ -15,7 +16,7 @@ def display_startup_info(vfs_path, start_script):
     print(f"Start script: {start_script if start_script else '(not specified)'}")
     print("=== Starting emulator ===")
 
-def execute_command(command, args):
+def execute_command(command, args, vfs):
     if command == "exit":
         return "exit", None
     elif command == "ls":
@@ -26,11 +27,15 @@ def execute_command(command, args):
         return "continue", format_command_output(command, args)
 
 def main():
-    # Получаем аргументы командной строки
     args = parse_arguments()
     
-    # Показываем отладочную информацию
+    vfs = VirtualFileSystem()
+    
     display_startup_info(args.vfs_path, args.start_script)
+    
+    # Если указан VFS путь - загружаем VFS
+    if args.vfs_path:
+        vfs.load_from_csv(args.vfs_path)
     
     # Если указан стартовый скрипт - выполняем его
     if args.start_script:
@@ -38,17 +43,14 @@ def main():
         script_commands = execute_script_file(args.start_script)
         
         for command_line in script_commands:
-            # Показываем команду
             print(f"[vfs] $ {command_line}")
             
-            # Выполняем команду
             command, args_list = parse_command(command_line)
             if command is None:
                 continue
                 
-            result_type, output = execute_command(command, args_list)
+            result_type, output = execute_command(command, args_list, vfs)  # ПЕРЕДАЕМ VFS!
             
-            # Показываем результат
             if output:
                 print(output)
             
@@ -64,7 +66,7 @@ def main():
         if command is None:
             continue
         
-        result_type, output = execute_command(command, args_list)
+        result_type, output = execute_command(command, args_list, vfs)  # ПЕРЕДАЕМ VFS!
         
         if output:
             print(output)

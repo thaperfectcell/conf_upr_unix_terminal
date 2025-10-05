@@ -1,0 +1,5 @@
+type,path,name,content,encoding,permissions
+directory,/,root,,text,rwxr-xr-x
+directory,/home,home,,text,rwxr-xr-x
+file,/home/welcome.txt,welcome.txt,"Добро пожаловать в VFS!",text,rw-r--r--
+file,/home/secret.dat,secret.dat,"0J3QsNC20LzQuCDRg9C00LDQu9C40YfQtdGB0LrQuCDQtNC70Y8g0LLQutC70Y7Rh9Cw",base64,rw-------

@@ -1,0 +1,6 @@
+type,path,name,content,encoding,permissions
+directory,/,root,,text,rwxr-xr-x
+directory,/bin,bin,,text,rwxr-xr-x
+directory,/etc,etc,,text,rwxr-xr-x
+file,/bin/script,script,"IyEvYmluL2Jhc2gKZWNobyAiUHJvZ3JhbSBzdGFydGVkIg==",base64,rwxr-xr-x
+file,/etc/config,config,"c2V0dGluZz12YWx1ZQpob3N0PWxvY2FsaG9zdA==",base64,rw-r--r--

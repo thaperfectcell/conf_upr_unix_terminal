@@ -1,0 +1,7 @@
+type,path,name,content,encoding,permissions
+directory,/,root,,text,rwxr-xr-x
+directory,/home,home,,text,rwxr-xr-x
+directory,/home/user,user,,text,rwxr-xr-x
+directory,/home/user/documents,documents,,text,rwxr-xr-x
+file,/home/user/documents/readme.txt,readme.txt,"Это файл на 3 уровне вложенности",text,rw-r--r--
+file,/home/user/documents/data.bin,data.bin,"0J3QsNC20LzQuCDRg9C00LDQu9C40YfQtdGB0LrQuCDQtNC70Y8g0LLQutC70Y7Rh9Cw",base64,rw-r--r--
