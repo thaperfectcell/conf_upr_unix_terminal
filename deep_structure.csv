@@ -1,7 +1,20 @@
 type,path,name,content,encoding,permissions
 directory,/,root,,text,rwxr-xr-x
-directory,/home,home,,text,rwxr-xr-x
-directory,/home/user,user,,text,rwxr-xr-x
-directory,/home/user/documents,documents,,text,rwxr-xr-x
-file,/home/user/documents/readme.txt,readme.txt,"Это файл на 3 уровне вложенности",text,rw-r--r--
-file,/home/user/documents/data.bin,data.bin,"0J3QsNC20LzQuCDRg9C00LDQu9C40YfQtdGB0LrQuCDQtNC70Y8g0LLQutC70Y7Rh9Cw",base64,rw-r--r--
+directory,/system,system,,text,rwxr-xr-x
+directory,/users,users,,text,rwxr-xr-x
+directory,/var,var,,text,rwxr-xr-x
+directory,/system/bin,bin,,text,rwxr-xr-x
+directory,/system/etc,etc,,text,rwxr-xr-x
+file,/system/version.txt,version.txt,"VFS Version 1.0",text,rw-r--r--
+directory,/users/admin,admin,,text,rwxr-xr-x
+directory,/users/guest,guest,,text,rwxr-xr-x
+file,/users/readme.md,readme.md,"IyBVc2VycwoKVGhpcyBpcyB1c2VycyBkaXJlY3Rvcnk=",base64,rw-r--r--
+directory,/var/log,log,,text,rwxr-xr-x
+directory,/var/tmp,tmp,,text,rwxr-xr-x
+file,/var/config.ini,config.ini,"W2RlZmF1bHRdCmhvc3Q9bG9jYWxob3N0CnBvcnQ9ODA4MA==",base64,rw-r--r--
+file,/system/bin/start.sh,start.sh,"IyEvYmluL2Jhc2gKZWNobyAiU3RhcnRpbmcuLi4i",base64,rwxr-xr-x
+file,/system/etc/settings.conf,settings.conf,"ZGVidWc9dHJ1ZQpsb2dfbGV2ZWw9aW5mbw==",base64,rw-r--r--
+file,/users/admin/.profile,.profile,"ZXhwb3J0IFBBVEg9Ii9iaW46L3Vzci9iaW4i",base64,rw-------
+file,/users/guest/welcome.txt,welcome.txt,"Welcome guest user!",text,rw-r--r--
+file,/var/log/system.log,system.log,"MjAyNC0wMS0xNSAxMjowMDowMCAtIFN5c3RlbSBzdGFydGVk",base64,rw-r--r--
+file,/var/tmp/temp.file,temp.file,"dGVtcG9yYXJ5IGRhdGE=",base64,rw-r--r--

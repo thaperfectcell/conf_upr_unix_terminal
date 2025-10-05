@@ -22,7 +22,7 @@ class VirtualFileSystem:
         self.current_path = "/"   # текущий путь
         self.current_directory = None
         self.nodes = {}           # словарь {путь: узел}
-        self.current_user = "virtual_user"
+        self.current_user = "user"
 
     def load_from_csv(self, csv_path):
         try:
@@ -200,3 +200,75 @@ class VirtualFileSystem:
             return f"{size_bytes / 1024:.1f} KB"
         else:
             return f"{size_bytes} bytes"
+        
+    def change_permissions(self, path, permissions):
+        node = self.get_node(path)
+        if not node:
+            return f"Error: Path '{path}' not found"
+        
+        # Конвертируем числовой формат в символьный если нужно
+        if permissions.isdigit():
+            permissions = self._numeric_to_symbolic(permissions)
+        
+        node.permissions = permissions
+        return "Success"
+
+    def _numeric_to_symbolic(self, numeric_perms):
+        """
+        Конвертирует числовой формат прав (755) в символьный (rwxr-xr-x)
+        """
+        if len(numeric_perms) != 3:
+            return numeric_perms
+        
+        symbolic = ""
+        for digit in numeric_perms:
+            num = int(digit)
+            symbolic += 'r' if num & 4 else '-'
+            symbolic += 'w' if num & 2 else '-'
+            symbolic += 'x' if num & 1 else '-'
+        
+        return symbolic
+
+    def copy_node(self, source_path, dest_path):
+        """
+        Копирует узел (файл или папку) в новое место
+        """
+        source_node = self.get_node(source_path)
+        if not source_node:
+            return f"Error: Source path '{source_path}' not found"
+        
+        # Проверяем что целевая директория существует
+        dest_parent_path = '/'.join(dest_path.split('/')[:-1]) or '/'
+        dest_parent = self.get_node(dest_parent_path)
+        
+        if not dest_parent or dest_parent.type != 'directory':
+            return f"Error: Destination directory '{dest_parent_path}' not found or not a directory"
+        
+        # Проверяем что целевое имя не занято
+        if self.get_node(dest_path):
+            return f"Error: Destination path '{dest_path}' already exists"
+        
+        # Создаем копию узла
+        new_node = VFSNode(
+            node_type=source_node.type,
+            path=dest_path,
+            name=dest_path.split('/')[-1],
+            content=source_node.content,
+            encoding=source_node.encoding,
+            permissions=source_node.permissions
+        )
+        
+        # Добавляем в VFS
+        self.nodes[dest_path] = new_node
+        
+        # Добавляем в родительскую директорию
+        dest_parent.children.append(new_node)
+        new_node.parent = dest_parent
+        
+        # Рекурсивно копируем детей если это директория
+        if source_node.type == 'directory':
+            for child in source_node.children:
+                child_dest_path = dest_path + '/' + child.name
+                self.copy_node(child.path, child_dest_path)
+        
+        return "Success"

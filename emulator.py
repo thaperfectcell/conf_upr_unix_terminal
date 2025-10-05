@@ -2,7 +2,7 @@ from parser import parse_command
 from config import parse_arguments
 from script_runner import execute_script_file
 from vfs import VirtualFileSystem
-from commands import execute_ls, execute_cd, execute_pwd, execute_whoami, execute_uptime, execute_du, execute_echo
+from commands import execute_ls, execute_cd, execute_pwd, execute_whoami, execute_uptime, execute_du, execute_echo, execute_chmod, execute_cp, execute_vfs_load
 import time
 
 class EmulatorState:
@@ -60,6 +60,15 @@ def execute_command(command, args, vfs, emulator_state):
         return "continue", result
     elif command == "echo":
         result = execute_echo(args, vfs)
+        return "continue", result
+    elif command == "chmod":
+        result = execute_chmod(args, vfs)
+        return "continue", result
+    elif command == "cp":
+        result = execute_cp(args, vfs)
+        return "continue", result
+    elif command == "vfs-load":
+        result = execute_vfs_load(args, vfs)
         return "continue", result
     else:
         return "continue", f"Error: command '{command}' not found"
