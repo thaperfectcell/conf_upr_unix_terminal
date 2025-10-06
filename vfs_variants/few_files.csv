@@ -1,5 +1,7 @@
 type,path,name,content,encoding,permissions
 directory,/,root,,text,rwxr-xr-x
+directory,/home,home,,text,rwxr-xr-x
+directory,/home/cd_test,cd_test,,text,rw-r--r--
 directory,/bin,bin,,text,rwxr-xr-x
 directory,/etc,etc,,text,rwxr-xr-x
 file,/bin/script,script,"IyEvYmluL2Jhc2gKZWNobyAiUHJvZ3JhbSBzdGFydGVkIg==",base64,rwxr-xr-x
